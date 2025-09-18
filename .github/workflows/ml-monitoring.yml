@@ -4,46 +4,63 @@ on:
   workflow_dispatch:
     inputs:
       duration_hours:
-        description: 'Duration in hours (default: 72)'
+        description: "Длительность мониторинга (часы)"
+        required: true
+        default: "72"
+      args:
+        description: "Дополнительные аргументы для скрипта"
         required: false
-        default: '72'
-        type: string
+        default: ""
+# При желании можно включить расписание:
+#  schedule:
+#    - cron: "0 2 * * *"
+
+concurrency:
+  group: monitoring-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   monitor:
-    runs-on: ubuntu-latest
-    timeout-minutes: 4320  # 72 hours max
-    
+    runs-on: [self-hosted, Windows, X64]
+    timeout-minutes: 4320  # 72 часа
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.9'
-        
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt || echo "No requirements.txt found"
-        
-    - name: Create logs directory
-      run: mkdir -p logs
-      
-    - name: Run ML monitoring
-      env:
-        DURATION_HOURS: ${{ inputs.duration_hours || '72' }}
-      run: |
-        echo "Starting ML monitoring for $DURATION_HOURS hours"
-        python scripts/run_monitoring.py --duration-hours $DURATION_HOURS
-        
-    - name: Upload monitoring logs
-      if: always()
-      uses: actions/upload-artifact@v3
-      with:
-        name: monitoring-logs-${{ github.run_id }}
-        path: |
-          logs/
-          monitoring.log
-        retention-days: 30
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pip
+            ~\AppData\Local\pip\Cache
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install deps (if present)
+        if: hashFiles('**/requirements.txt') != ''
+        shell: powershell
+        run: pip install -r requirements.txt
+
+      - name: Run monitoring
+        shell: powershell
+        env:
+          DURATION_HOURS: ${{ inputs.duration_hours }}
+        run: |
+          python scripts/run_monitoring.py --hours "${{ inputs.duration_hours }}" ${{ inputs.args }} 2>&1 | Tee-Object -FilePath monitoring.log
+
+      - name: Upload logs (always)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: monitoring-logs
+          path: |
+            monitoring.log
+            logs/**
+          if-no-files-found: ignore
+          retention-days: 7
