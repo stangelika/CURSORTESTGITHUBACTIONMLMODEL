@@ -1,0 +1,30 @@
+{
+  "name": "memory",
+  "description": "Memory MCP Server - персистентная память для AI",
+  "version": "1.0.0", 
+  "author": "modelcontextprotocol",
+  "server": {
+    "type": "stdio",
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-memory"]
+  },
+  "capabilities": [
+    "knowledge-storage",
+    "context-retention",
+    "session-memory"
+  ],
+  "examples": [
+    {
+      "command": "Запомни, что пользователь предпочитает Python 3.11",
+      "description": "Сохранение информации о предпочтениях"
+    },
+    {
+      "command": "Что мы обсуждали на прошлой неделе?",
+      "description": "Доступ к предыдущим разговорам"
+    },
+    {
+      "command": "Сохрани код этой функции для будущего использования", 
+      "description": "Хранение фрагментов кода"
+    }
+  ]
+}

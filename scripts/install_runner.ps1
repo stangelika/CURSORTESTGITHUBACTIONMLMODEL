@@ -33,3 +33,10 @@ cmd /c ".\svc install"
 cmd /c ".\svc start"
 
 Write-Host "Готово. Проверь статус в репозитории: Settings → Actions → Runners (должен быть Online / Idle)."
+
+
+
+
+
+
+

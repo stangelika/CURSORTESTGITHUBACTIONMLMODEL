@@ -1,0 +1,54 @@
+{
+  "mcpVersion": "1.0.0",
+  "description": "Model Context Protocol Servers Configuration",
+  "lastUpdated": "2024-09-18T18:25:00Z",
+  "servers": [
+    {
+      "id": "context7",
+      "name": "Context7 MCP",
+      "configFile": "./context7.json",
+      "enabled": true,
+      "priority": 1,
+      "category": "documentation"
+    },
+    {
+      "id": "github", 
+      "name": "GitHub MCP",
+      "configFile": "./github.json", 
+      "enabled": true,
+      "priority": 2,
+      "category": "development"
+    },
+    {
+      "id": "filesystem",
+      "name": "Filesystem MCP",
+      "configFile": "./filesystem.json",
+      "enabled": true,
+      "priority": 3,
+      "category": "system"
+    },
+    {
+      "id": "sqlite",
+      "name": "SQLite MCP",
+      "configFile": "./sqlite.json", 
+      "enabled": true,
+      "priority": 4,
+      "category": "database"
+    },
+    {
+      "id": "memory",
+      "name": "Memory MCP",
+      "configFile": "./memory.json",
+      "enabled": true,
+      "priority": 5,
+      "category": "ai-enhancement"
+    }
+  ],
+  "globalSettings": {
+    "timeout": 30000,
+    "retries": 3,
+    "logLevel": "info"
+  }
+}
+
+

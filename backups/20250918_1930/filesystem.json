@@ -1,0 +1,31 @@
+{
+  "name": "filesystem",
+  "description": "Filesystem MCP Server - файловые операции",
+  "version": "1.0.0",
+  "author": "modelcontextprotocol",
+  "server": {
+    "type": "stdio",
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-filesystem"]
+  },
+  "capabilities": [
+    "file-read",
+    "file-write",
+    "directory-list",
+    "file-search"
+  ],
+  "examples": [
+    {
+      "command": "Прочитай файл package.json",
+      "description": "Чтение содержимого файлов"
+    },
+    {
+      "command": "Найди все .js файлы в проекте",
+      "description": "Поиск файлов по расширению"
+    },
+    {
+      "command": "Создай файл README.md с описанием",
+      "description": "Создание новых файлов"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "name": "context7",
+  "description": "Context7 MCP Server - актуальная документация библиотек",
+  "version": "1.0.0",
+  "author": "upstash",
+  "server": {
+    "type": "http",
+    "url": "https://mcp.context7.com/mcp",
+    "headers": {
+      "Authorization": "Bearer ${CONTEXT7_API_KEY}",
+      "Content-Type": "application/json"
+    }
+  },
+  "tools": [
+    "resolve-library-id",
+    "get-library-docs"
+  ],
+  "capabilities": [
+    "documentation",
+    "code-examples",
+    "library-search"
+  ],
+  "examples": [
+    {
+      "command": "Покажи примеры React хуков",
+      "description": "Получить актуальные примеры использования React хуков"
+    },
+    {
+      "command": "Как использовать Next.js App Router?",
+      "description": "Документация и примеры Next.js App Router"
+    },
+    {
+      "command": "TypeScript generic types примеры",
+      "description": "Современные примеры TypeScript generic types"
+    }
+  ]
+}
+
+

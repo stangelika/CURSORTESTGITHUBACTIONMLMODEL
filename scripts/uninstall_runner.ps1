@@ -21,3 +21,10 @@ Set-Location \
 Remove-Item -Recurse -Force $InstallDir
 
 Write-Host "Готово."
+
+
+
+
+
+
+

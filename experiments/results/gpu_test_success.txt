@@ -1,0 +1,4 @@
+GPU Test Success
+Device: cuda
+PyTorch: 2.5.1+cu121
+CUDA: True

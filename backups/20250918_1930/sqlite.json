@@ -1,0 +1,30 @@
+{
+  "name": "sqlite", 
+  "description": "SQLite MCP Server - работа с базами данных SQLite",
+  "version": "1.0.0",
+  "author": "modelcontextprotocol",
+  "server": {
+    "type": "stdio",
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-sqlite", "path/to/database.db"]
+  },
+  "capabilities": [
+    "sql-query",
+    "schema-introspection", 
+    "data-manipulation"
+  ],
+  "examples": [
+    {
+      "command": "SELECT * FROM users LIMIT 10",
+      "description": "Выполнение SQL запросов"
+    },
+    {
+      "command": "Покажи схему всех таблиц в БД",
+      "description": "Анализ структуры базы данных"
+    },
+    {
+      "command": "Создай таблицу products с полями id, name, price",
+      "description": "Создание структур данных"
+    }
+  ]
+}

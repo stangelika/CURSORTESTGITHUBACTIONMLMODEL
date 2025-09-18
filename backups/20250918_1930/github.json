@@ -1,0 +1,71 @@
+{
+  "name": "github",
+  "description": "GitHub MCP Server - управление репозиториями через AI",
+  "version": "1.0.0",
+  "author": "github",
+  "server": {
+    "type": "docker",
+    "command": "docker",
+    "args": [
+      "run",
+      "-i",
+      "--rm",
+      "-e",
+      "GITHUB_PERSONAL_ACCESS_TOKEN",
+      "-e",
+      "GITHUB_TOOLSETS",
+      "ghcr.io/github/github-mcp-server"
+    ],
+    "env": {
+      "GITHUB_PERSONAL_ACCESS_TOKEN": "${input:github_token}",
+      "GITHUB_TOOLSETS": "context,repos,issues,pull_requests,actions,code_security,discussions,notifications,orgs,users"
+    }
+  },
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "github_token",
+      "description": "GitHub Personal Access Token",
+      "password": true
+    }
+  ],
+  "toolsets": [
+    "context",
+    "repos", 
+    "issues",
+    "pull_requests",
+    "actions",
+    "code_security",
+    "discussions",
+    "notifications",
+    "orgs",
+    "users"
+  ],
+  "capabilities": [
+    "repository-management",
+    "issue-management",
+    "pull-request-management",
+    "ci-cd-automation",
+    "code-security-analysis"
+  ],
+  "examples": [
+    {
+      "command": "Покажи последние коммиты в репозитории",
+      "description": "Получить список последних коммитов"
+    },
+    {
+      "command": "Создай issue 'Добавить новую функциональность'",
+      "description": "Создание нового issue"
+    },
+    {
+      "command": "Проанализируй код на уязвимости безопасности",
+      "description": "Анализ безопасности кода"
+    },
+    {
+      "command": "Покажи статус GitHub Actions",
+      "description": "Мониторинг CI/CD процессов"
+    }
+  ]
+}
+
+

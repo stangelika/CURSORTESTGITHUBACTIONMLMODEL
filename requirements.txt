@@ -1,2 +1,16 @@
-# Base requirements for ML monitoring
-# Add your specific ML libraries here as needed
+# ML Workstation Requirements для GitHub Actions
+# Базовые пакеты для self-hosted runner
+
+torch==2.5.1
+torchvision==0.20.1
+torchaudio==2.5.1
+tensorflow==2.20.0
+
+numpy==2.2.6
+pandas==2.3.2
+scikit-learn==1.7.2
+matplotlib==3.10.6
+
+# Системные утилиты
+psutil==6.1.0
+tqdm==4.67.1
