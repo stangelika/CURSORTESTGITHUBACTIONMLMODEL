@@ -1,0 +1,39 @@
+name: Test Workflow Syntax (GitHub-hosted)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test-syntax:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Test basic imports
+        run: |
+          python -c "print('✅ Python works')"
+          python -c "import sys; print(f'Python version: {sys.version}')"
+          
+      - name: Check files structure
+        run: |
+          echo "📁 Repository structure:"
+          find . -name "*.py" -o -name "*.yml" | head -10
+          
+      - name: Validate scripts
+        run: |
+          echo "🔍 Validating Python scripts..."
+          python -m py_compile scripts/gpu_monitor.py
+          python -m py_compile scripts/train.py
+          echo "✅ All Python scripts are valid"
+          
+      - name: Success
+        run: echo "🎉 Workflow syntax test passed!"
