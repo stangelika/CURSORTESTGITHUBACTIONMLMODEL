@@ -1,0 +1,2 @@
+# Base requirements for ML monitoring
+# Add your specific ML libraries here as needed

@@ -1,0 +1,6 @@
+# Исключить из ИИ-контекста (НЕ из Git)
+node_modules/
+.git/
+dist/
+build/
+out/
