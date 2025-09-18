@@ -1,0 +1,95 @@
+name: ML Test (GitHub-hosted, CPU only)
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_name:
+        description: "Имя запуска/эксперимента"
+        required: false
+        default: "github-test-${{ github.run_number }}"
+
+jobs:
+  test-ml:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      LOG_DIR: logs/actions-run-${{ github.run_id }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install basic requirements
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+          pip install numpy pandas scikit-learn matplotlib
+
+      - name: Create log directory
+        run: mkdir -p ${{ env.LOG_DIR }}
+
+      - name: Check Python/PyTorch (CPU)
+        run: |
+          python - << 'PY'
+import torch
+import sys
+print("🐍 Python:", sys.version)
+print("🔥 PyTorch:", torch.__version__)
+print("💻 Device:", "cuda" if torch.cuda.is_available() else "cpu")
+print("🔢 CPU threads:", torch.get_num_threads())
+PY
+
+      - name: Run demo training (CPU)
+        run: |
+          python - << 'PY' | tee ${{ env.LOG_DIR }}/train.log
+import torch
+import torch.nn as nn
+import time
+
+print("🚀 Demo ML training on GitHub runners")
+device = torch.device('cpu')
+print(f"📱 Device: {device}")
+
+# Simple model
+model = nn.Sequential(
+    nn.Linear(100, 50),
+    nn.ReLU(),
+    nn.Linear(50, 10)
+).to(device)
+
+# Demo data
+X = torch.randn(1000, 100).to(device)
+y = torch.randint(0, 10, (1000,)).to(device)
+
+criterion = nn.CrossEntropyLoss()
+optimizer = torch.optim.Adam(model.parameters())
+
+print("🏋️ Training started...")
+start_time = time.time()
+
+for epoch in range(5):
+    optimizer.zero_grad()
+    outputs = model(X)
+    loss = criterion(outputs, y)
+    loss.backward()
+    optimizer.step()
+    print(f"Epoch {epoch+1}: Loss = {loss.item():.4f}")
+
+training_time = time.time() - start_time
+print(f"✅ Training completed in {training_time:.2f}s")
+print("🎉 Demo successful!")
+PY
+
+      - name: Upload demo artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: "ml-demo-${{ github.run_id }}"
+          path: |
+            ${{ env.LOG_DIR }}/
+          if-no-files-found: ignore
+          retention-days: 7
