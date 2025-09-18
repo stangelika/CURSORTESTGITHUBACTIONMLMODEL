@@ -1,19 +1,15 @@
-name: ML Test (GitHub-hosted, CPU only)
+name: ML Test (GitHub-hosted, CPU)
 
 on:
   workflow_dispatch:
-    inputs:
-      run_name:
-        description: "Имя запуска/эксперимента"
-        required: false
-        default: "github-test-${{ github.run_number }}"
 
 jobs:
   test-ml:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 30
     env:
-      LOG_DIR: logs/actions-run-${{ github.run_id }}
+      PYTHON_VERSION: "3.11"
+      LOG_DIR: logs/github-test-${{ github.run_id }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -21,14 +17,18 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: ${{ env.PYTHON_VERSION }}
           cache: 'pip'
 
       - name: Install basic requirements
         run: |
           python -m pip install --upgrade pip
-          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
-          pip install numpy pandas scikit-learn matplotlib
+          if [ -f "requirements.txt" ]; then
+            pip install -r requirements.txt
+          else
+            pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+            pip install numpy pandas scikit-learn matplotlib
+          fi
 
       - name: Create log directory
         run: mkdir -p ${{ env.LOG_DIR }}
@@ -46,7 +46,10 @@ PY
 
       - name: Run demo training (CPU)
         run: |
-          python - << 'PY' | tee ${{ env.LOG_DIR }}/train.log
+          if [ -f "experiments/train.py" ]; then
+            python experiments/train.py --device cpu --epochs 3 | tee ${{ env.LOG_DIR }}/train.log
+          else
+            python - << 'PY' | tee ${{ env.LOG_DIR }}/train.log
 import torch
 import torch.nn as nn
 import time
@@ -84,12 +87,14 @@ training_time = time.time() - start_time
 print(f"✅ Training completed in {training_time:.2f}s")
 print("🎉 Demo successful!")
 PY
+          fi
 
       - name: Upload demo artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: "ml-demo-${{ github.run_id }}"
+          name: "ml-test-${{ github.run_id }}"
           path: |
             ${{ env.LOG_DIR }}/
+            experiments/results/
           if-no-files-found: ignore
           retention-days: 7
