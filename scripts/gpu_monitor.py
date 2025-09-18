@@ -51,7 +51,7 @@ class GPUMonitor:
                 logger.info(f"NVML initialized. Found {self.gpu_count} GPU(s)")
             except Exception as e:
                 logger.error(f"NVML initialization failed: {e}")
-                NVML_AVAILABLE = False
+                # Can't modify global NVML_AVAILABLE, so just continue with fallback
         
         if not NVML_AVAILABLE:
             logger.warning("NVML not available. Will use nvidia-smi fallback")
