@@ -1,0 +1,33 @@
+# ML Workstation Automation Stack Requirements
+# For Windows 11 + RTX 4060 + Python 3.11.4 + CUDA 12.x
+
+# Core ML frameworks (GPU-enabled PyTorch)
+torch>=2.0.0
+torchvision>=0.15.0  
+torchaudio>=2.0.0
+
+# Data science stack
+numpy>=1.24.0
+pandas>=2.0.0
+scikit-learn>=1.3.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# TensorFlow (CPU-only for Windows compatibility)
+tensorflow-cpu>=2.13.0
+
+# GPU monitoring and system utilities
+pynvml>=11.5.0
+psutil>=5.8.0
+
+# Development and testing
+pytest>=7.0.0
+tqdm>=4.65.0
+Pillow>=10.0.0
+
+# Optional: Jupyter for experiments
+jupyter>=1.0.0
+ipykernel>=6.20.0
+
+# Installation note:
+# For CUDA PyTorch on Windows: pip install torch --index-url https://download.pytorch.org/whl/cu121
